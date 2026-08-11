@@ -7,7 +7,7 @@ A powerful, privacy-first Userscript that exports your entire Google Gemini chat
 
 ---
 <img style="width: 50%;" alt="Screen" src="https://github.com/user-attachments/assets/921a8016-ae47-407c-8c4a-7c6248d56ecd" />
-<img style="width: 50%;" alt="Screen" src="[https://github.com/user-attachments/assets/921a8016-ae47-407c-8c4a-7c6248d56ecd](https://github.com/user-attachments/assets/0679ae69-5ab7-40eb-9af6-6bd062e36990)" />
+<img style="width: 50%;" alt="Screen" src="https://github.com/user-attachments/assets/0679ae69-5ab7-40eb-9af6-6bd062e36990" />
 
 ## ✨ Features & Key Advantages
 
