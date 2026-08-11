@@ -4,7 +4,6 @@ A powerful, privacy-first Userscript that exports your entire Google Gemini chat
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Tampermonkey%20%7C%20Violentmonkey-green.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25%20Local-success.svg)
-<img width="2712" height="1666" alt="Immagine 2026-08-11 123901" src="https://github.com/user-attachments/assets/d6178bfa-4ca8-4e51-aa91-f6e34530a5aa" />
 
 ---
 <table>
