@@ -30,7 +30,7 @@ Why choose **Gemini Chat Exporter** over standard extensions or copy-pasting?
 2. **Add the Script:**
    - Click on the Userscript Manager icon in your browser menu.
    - Select **Create a new script...**
-   - Copy and paste the entire content of [`gemini-exporter.user.js`](./gemini-exporter.user.js) into the editor.
+   - Copy and paste the entire content of [`gemini-exporter.user.js`](./gemini-chat-exporter.user.js) into the editor.
    - Save the script (`Ctrl + S` or `Cmd + S`).
 
 ---
