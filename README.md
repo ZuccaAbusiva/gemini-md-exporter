@@ -9,10 +9,10 @@ A powerful, privacy-first Userscript that exports your entire Google Gemini chat
 <table>
   <tr>
     <td width="50%">
-      <img src="https://github.com/user-attachments/assets/921a8016-ae47-407c-8c4a-7c6248d56ecd" alt="Screen 1" style="width:100%;">
+      <img src="https://github.com/user-attachments/assets/825434ac-db97-4169-90c1-19d6b3a4d24a" alt="Screen 1" style="width:100%;">
     </td>
     <td width="50%">
-      <img src="https://github.com/user-attachments/assets/d6178bfa-4ca8-4e51-aa91-f6e34530a5aa" alt="Screen 2" style="width:100%;">
+      <img src="https://github.com/user-attachments/assets/ab39f25d-edf0-4f83-9dd2-8a8987490a2c" alt="Screen 2" style="width:100%;">
     </td>
   </tr>
 </table>
