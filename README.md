@@ -49,6 +49,7 @@ Why choose **Gemini Chat Exporter** over standard extensions or copy-pasting?
 ---
 
 ## 📝 Markdown Preview Structure
+📄 **[View Full Export Example (Example_Output.md)](Example_Output.md)**
 
 ```markdown
 # Gemini Conversation
