@@ -80,3 +80,8 @@ Why choose **Gemini Chat Exporter** over standard extensions or copy-pasting?
 Quantum computing is a rapidly-emerging technology that harnesses the laws of quantum mechanics...
 
 ---
+```
+
+## Lacking features (I may add them in the future)
+- Bulk export of all chats
+- Image incorporation
