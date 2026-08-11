@@ -13,7 +13,7 @@ A powerful, privacy-first Userscript that exports your entire Google Gemini chat
 Why choose **Gemini Chat Exporter** over standard extensions or copy-pasting?
 
 - **🔄 Unstoppable Deep Auto-Scroll (Bypass Lazy-Loading):** Google Gemini lazily loads long chat histories as you scroll up. This script automatically scrolls through multiple DOM container candidates until **all historical turns** are fully loaded before exporting.
-- **🗺️ Universal Table of Contents (TOC):** Generates clean anchor links (`#q1`, `#q2`, ...) and 20-word prompt summaries. Works seamlessly in **Obsidian**, **GitHub Gists**, **VS Code**, and standard Markdown viewers.
+- **🗺️ Universal Table of Contents (TOC):** Generates clean anchor links (`#q1`, `#q2`, ...) and 20-word prompt summaries. Works seamlessly in **Obsidian**, **GitHub Gists**, **VS Code**, and standard Markdown viewers. Uses H1 titles for every new question so the resulting .md is easilly collapsable in Obsidian.
 - **🧹 Clean Multilingual Parsing:** Strips UI junk, copy buttons, draft containers, and system prefixes (e.g., *"You said"*, *"Hai detto"*, *"Vous avez dit"*, *"Du hast gesagt"*).
 - **📊 Native Table & Code Block Support:** Converts HTML tables into standard GFM Markdown tables and preserves code block formatting effortlessly.
 - **🔒 100% Private & Local:** Runs entirely inside your browser. No external servers, no tracking, no third-party libraries required.
