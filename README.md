@@ -6,7 +6,7 @@ A powerful, privacy-first Userscript that exports your entire Google Gemini chat
 ![Privacy](https://img.shields.io/badge/privacy-100%25%20Local-success.svg)
 
 ---
-<img width="2879" height="1799" alt="Screen" src="https://github.com/user-attachments/assets/921a8016-ae47-407c-8c4a-7c6248d56ecd" />
+<img style="width: 50%;" alt="Screen" src="https://github.com/user-attachments/assets/921a8016-ae47-407c-8c4a-7c6248d56ecd" />
 
 ## ✨ Features & Key Advantages
 
