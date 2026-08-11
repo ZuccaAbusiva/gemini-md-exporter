@@ -32,6 +32,8 @@ Why choose **Gemini Chat Exporter** over standard extensions or copy-pasting?
    - Select **Create a new script...**
    - Copy and paste the entire content of [`gemini-exporter.user.js`](./gemini-chat-exporter.user.js) into the editor.
    - Save the script (`Ctrl + S` or `Cmd + S`).
+  
+You can also install it directly from [GreasyFork](https://greasyfork.org/it/scripts/590845-gemini-chat-exporter-ultimate-dom-autoscroll)
 
 ---
 
