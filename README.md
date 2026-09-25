@@ -1,5 +1,5 @@
 # gemini full chat markdown exporter userscript
-A powerful, privacy-first Userscript that exports your entire Google Gemini chat history into clean, beautifully structured **Native Markdown** with a universal **Table of Contents (TOC)** compatible with Obsidian, GitHub, Logseq, Marktext, Logseq & more.
+A powerful, privacy-first Userscript that exports your Google Gemini chats into clean, beautifully structured **Native Markdown** with offline-embedded images and a universal **Table of Contents (TOC)** compatible with Obsidian, GitHub, Logseq, VS Code, Marktext & more.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Tampermonkey%20%7C%20Violentmonkey-green.svg)
@@ -21,12 +21,15 @@ A powerful, privacy-first Userscript that exports your entire Google Gemini chat
 
 Why choose **Gemini Chat Exporter** over standard extensions or copy-pasting?
 
-- **🔄 Unstoppable Deep Auto-Scroll (Bypass Lazy-Loading):** Google Gemini lazily loads long chat histories as you scroll up. This script automatically scrolls through multiple DOM container candidates until **all historical turns** are fully loaded before exporting.
-- **🗺️ Universal Table of Contents (TOC):** Generates clean anchor links (`#q1`, `#q2`, ...) and 20-word prompt summaries. Works seamlessly in **Obsidian**, **GitHub Gists**, **VS Code**, and standard Markdown viewers. Uses H1 titles for every new question so the resulting .md is easilly collapsable in Obsidian.
-- **🧹 Clean Multilingual Parsing:** Strips UI junk, copy buttons, draft containers, and system prefixes (e.g., *"You said"*, *"Hai detto"*, *"Vous avez dit"*, *"Du hast gesagt"*).
-- **📊 Native Table & Code Block Support:** Converts HTML tables into standard GFM Markdown tables and preserves code block formatting effortlessly.
-- **🔒 100% Private & Local:** Runs entirely inside your browser. No external servers, no tracking, no third-party libraries required.
-- **🏷️ Smart Auto-Naming:** Dynamically extracts the chat's actual title and appends the export date (`Chat Title - YYYY-MM-DD.md`).
+- **🎯 Unified Action Button:** A single, non-intrusive floating button that lets you choose whether to download the active conversation or run an automated batch export of your entire history.
+- **📚 Batch Export with Live Interrupt:** Automatically scans and expands your sidebar, navigates across all your chats sequentially, and exports each one to its own `.md` file. Need to pause or stop? Simply click the red **`🛑 Stop Batch`** button at any time.
+- **🖼️ 100% Offline Embedded Images:** Converts AI-generated visuals (including Imagen creations and `blob:` sources) into local Base64 URI strings (`data:image/...`). Your Markdown files remain completely self-contained and render perfectly offline without broken links.
+- **🔄 Unstoppable Deep Auto-Scroll (Bypass Lazy-Loading):** Automatically scrolls through multiple DOM container candidates until **all historical turns** are fully loaded before generating the file.
+- **🗺️ Universal Table of Contents (TOC):** Generates clean anchor links (`#q1`, `#q2`, ...) and 20-word prompt summaries. Uses `# Q1` header levels for every prompt so sections collapse cleanly in Obsidian and VS Code.
+- **🧹 Clean Multilingual Parsing:** Strips UI noise, copy buttons, draft containers, and system prefixes (e.g., *"You said"*, *"Hai detto"*, *"Vous avez dit"*, *"Du hast gesagt"*).
+- **📊 Native Table & Code Block Support:** Converts Gemini HTML tables into standard GFM Markdown tables and preserves syntax-highlighted code blocks.
+- **🔒 100% Private & Local:** Runs entirely inside your browser sandbox. No external telemetry, no remote proxies, and no third-party servers.
+- **🏷️ Smart Auto-Naming:** Dynamically extracts each chat's actual title and appends the export date (`Chat Title - YYYY-MM-DD.md`).
 
 ---
 
@@ -37,30 +40,27 @@ Why choose **Gemini Chat Exporter** over standard extensions or copy-pasting?
    - [Violentmonkey](https://violentmonkey.github.io/)
 
 2. **Add the Script:**
-   - Click on the Userscript Manager icon in your browser menu.
+   - Click on the Userscript Manager icon in your browser toolbar.
    - Select **Create a new script...**
    - Copy and paste the entire content of [`gemini-exporter.user.js`](./gemini-chat-exporter.user.js) into the editor.
    - Save the script (`Ctrl + S` or `Cmd + S`).
-  
+   
 You can also install it directly from [GreasyFork](https://greasyfork.org/it/scripts/590845-gemini-chat-exporter-ultimate-dom-autoscroll)
 
 ---
 
 ## 🚀 How to Use
 
-1. Open any chat on [Google Gemini](https://gemini.google.com/).
-2. Look for the floating **`📥 Export All (MD)`** button at the bottom right corner of the page.
-3. Click the button.
-4. Sit back! The script will:
-   - Automatically scroll up to load the full message history.
-   - Parse all user queries and Gemini responses.
-   - Convert the conversation into structured Markdown with a TOC.
-   - Trigger a download of the `.md` file.
+1. Open [Google Gemini](https://gemini.google.com/).
+2. Click the floating **`📥 Export .md`** button at the bottom-right corner of the page.
+3. Choose your mode in the prompt dialog:
+   - **Click OK:** Exports **ONLY** the current active chat.
+   - **Click CANCEL:** Starts the **Batch Export** sequence to save all chats in your sidebar.
+4. During a batch run, the button turns red (**`🛑 Stop Batch`**). Click it at any moment to safely cancel remaining downloads.
 
 ---
 
 ## 📝 Markdown Preview Structure
-
 
 📄 **[View Full Export Example (Example_Output.md)](Example_Output.md)**
 
@@ -74,7 +74,7 @@ You can also install it directly from [GreasyFork](https://greasyfork.org/it/scr
 ## Table of Contents
 
 1. [Explain quantum computing in simple terms...](#q1)
-2. [Can you provide a Python script to parse JSON...](#q2)
+2. [Can you generate a landscape concept artwork...](#q2)
 
 ---
 
@@ -91,8 +91,20 @@ You can also install it directly from [GreasyFork](https://greasyfork.org/it/scr
 Quantum computing is a rapidly-emerging technology that harnesses the laws of quantum mechanics...
 
 ---
-```
 
-## Lacking features (I may add them in the future)
-- Bulk export of all chats
-- Image incorporation
+# Q2
+
+##### You:
+
+> Can you generate a landscape concept artwork of a futuristic city?
+
+---
+
+##### Gemini:
+
+Here is the concept render based on your description:
+
+![Futuristic City](data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD...)
+*A futuristic city at dusk, AI generated*
+
+---
