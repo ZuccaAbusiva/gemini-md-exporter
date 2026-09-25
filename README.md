@@ -1,4 +1,4 @@
-# gemini-md-exporter
+# gemini full chat markdown exporter userscript
 A powerful, privacy-first Userscript that exports your entire Google Gemini chat history into clean, beautifully structured **Native Markdown** with a universal **Table of Contents (TOC)** compatible with Obsidian, GitHub, Logseq, Marktext, Logseq & more.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
