@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name         Gemini Chat Exporter (Ultimate DOM + AutoScroll)
+// @name         Gemini Chat Markdown Exporter
 // @namespace    http://tampermonkey.net/
-// @version      4.3
+// @version      4.4
 // @description  Bypasses scroll limits, exports to clean native Markdown, and generates universal TOC (Obsidian/GitHub).
 // @author       ZuccaAbusiva
 // @match        https://gemini.google.com/*
 // @grant        none
+// @license      MIT
 // ==/UserScript==
 
 (function () {
@@ -16,10 +17,10 @@
 
         const btn = document.createElement('button');
         btn.id = 'gemini-md-exporter-btn';
-        btn.innerText = '📥 Export All (MD)';
+        btn.innerText = '📥 Export .md';
         Object.assign(btn.style, {
             position: 'fixed', bottom: '20px', right: '20px', zIndex: '999999',
-            padding: '12px 18px', backgroundColor: '#1a73e8', color: '#ffffff',
+            padding: '12px 18px', backgroundColor: '#1d358a', color: '#ffffff',
             border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px',
             cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
             transition: 'all 0.2s ease'
@@ -32,7 +33,6 @@
         document.body.appendChild(btn);
     }
 
-    // Forceful auto-scroller for lazy-loaded history
     async function forceScrollToTop(btn) {
         let lastCount = 0;
         let noChangeCount = 0;
@@ -55,7 +55,6 @@
             });
 
             btn.innerText = `⏳ Fetching older messages... (${noChangeCount + 1}/${MAX_RETRIES})`;
-
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             const currentCount = document.querySelectorAll('user-query, model-response').length;
@@ -71,6 +70,26 @@
         }
     }
 
+    // Estrazione pulita del testo dell'utente per evitare duplicati da nodi accessibili/nascosti
+    function getUserQueryText(turn) {
+        const clone = turn.cloneNode(true);
+
+        // Rimuove bottoni di modifica, elementi per screen reader o elementi nascosti
+        const junk = clone.querySelectorAll(
+            'button, .cdk-visually-hidden, [aria-hidden="true"], mat-icon, .edit-button'
+        );
+        junk.forEach(el => el.remove());
+
+        // Cerca il blocco di testo primario
+        const specificEl = clone.querySelector('.query-text, .text-content, p') || clone.querySelector('.query-content') || clone;
+
+        let text = specificEl.innerText || specificEl.textContent || '';
+
+        return text
+            .replace(/^(Hai detto|You said|Dijiste|Vous avez dit|Du hast gesagt|Você disse)\s*/i, '')
+            .trim();
+    }
+
     async function startExportProcess() {
         const btn = document.getElementById('gemini-md-exporter-btn');
         const originalText = btn.innerText;
@@ -82,10 +101,7 @@
             btn.innerText = '⚙️ Generating Markdown...';
 
             const turns = document.querySelectorAll('user-query, model-response');
-
-            if (turns.length === 0) {
-                throw new Error("No messages found in the DOM.");
-            }
+            if (turns.length === 0) throw new Error("No messages found in the DOM.");
 
             let tocEntries = [];
             let conversationBlocks = [];
@@ -96,35 +112,25 @@
                 const isUser = turn.tagName.toLowerCase() === 'user-query';
 
                 if (isUser) {
-                    const queryDiv = turn.querySelector('.query-content, .query-text') || turn;
+                    let userText = getUserQueryText(turn);
 
-                    // Removes prefix inserted by Gemini in major languages
-                    let userText = queryDiv.textContent.trim()
-                    .replace(/^(Hai detto|You said|Dijiste|Vous avez dit|Du hast gesagt|Você disse)\s*/i, '')
-                    .trim();
+                    // Evita stringhe vuote
+                    if (!userText) continue;
 
-                    // Take first 20 words for TOC
+                    // Anteprima per TOC
                     let words = userText.split(/\s+/).filter(Boolean);
                     let shortPrompt = words.slice(0, 20).join(' ');
+                    if (words.length > 20) shortPrompt += '...';
 
-                    if (words.length > 20) {
-                        shortPrompt += '...';
-                    }
-
-                    // Universal GFM/Obsidian ID (no spaces, all lowercase -> e.g. q1, q2)
                     const anchorId = `q${turnCounter}`;
-
-                    // TOC entry
                     tocEntries.push(`${turnCounter}. [${shortPrompt}](#${anchorId})`);
 
-                    // Clean user block (e.g. "# Q1" instead of "# Q 1")
                     let formattedPrompt = userText.split('\n').map(line => `> ${line}`).join('\n');
                     let userBlock = `# Q${turnCounter}\n\n##### You:\n\n${formattedPrompt}\n\n---`;
 
                     conversationBlocks.push(userBlock);
                     turnCounter++;
                 } else {
-                    // Gemini response
                     const responseDiv = turn.querySelector('message-content, .model-response-text, .markdown') || turn;
                     let geminiContent = convertToMarkdown(responseDiv).replace(/\n{3,}/g, '\n\n').trim();
 
@@ -133,14 +139,8 @@
                 }
             }
 
-            // Final Markdown assembly
             let markdown = `# Gemini Conversation\n\n*Exported on: ${new Date().toLocaleString()}*\n\n---\n\n`;
-
-            // Table of Contents
-            markdown += `## Table of Contents\n\n`;
-            markdown += tocEntries.join('\n') + `\n\n---\n\n`;
-
-            // Conversation body
+            markdown += `## Table of Contents\n\n${tocEntries.join('\n')}\n\n---\n\n`;
             markdown += conversationBlocks.join('\n\n') + `\n`;
 
             downloadFile(markdown);
@@ -154,83 +154,54 @@
         }
     }
 
-    // HTML to Markdown converter
     function convertToMarkdown(node) {
         if (!node) return '';
-
-        if (node.nodeType === Node.TEXT_NODE) {
-            return node.textContent;
-        }
-
-        if (node.nodeType !== Node.ELEMENT_NODE) {
-            return '';
-        }
+        if (node.nodeType === Node.TEXT_NODE) return node.textContent;
+        if (node.nodeType !== Node.ELEMENT_NODE) return '';
 
         const tag = node.tagName.toLowerCase();
+        let cls = typeof node.className === 'string' ? node.className : (node.classList ? Array.from(node.classList).join(' ') : '');
 
-        let cls = '';
-        if (typeof node.className === 'string') {
-            cls = node.className;
-        } else if (node.classList && node.classList.length > 0) {
-            cls = Array.from(node.classList).join(' ');
-        }
-
-        // Clean UI junk
         if (tag === 'button' || tag === 'svg' || tag === 'script' || tag === 'style' ||
-            cls.includes('action-container') ||
-            cls.includes('copy-button') ||
-            cls.includes('code-block-decoration') ||
-            cls.includes('draft-container') ||
+            cls.includes('action-container') || cls.includes('copy-button') ||
+            cls.includes('code-block-decoration') || cls.includes('draft-container') ||
             cls.includes('hidden')) {
             return '';
         }
 
-        // Code blocks
         if (tag === 'pre' || cls.includes('code-block')) {
             const codeNode = node.querySelector('code');
             const code = codeNode ? codeNode.textContent : node.textContent;
             return `\n\`\`\`\n${code.trim()}\n\`\`\`\n\n`;
         }
 
-        // Table handling
         if (tag === 'table') {
             const rows = Array.from(node.querySelectorAll('tr'));
             if (rows.length === 0) return '';
             let md = '\n';
             rows.forEach((row, index) => {
                 const cols = Array.from(row.querySelectorAll('td, th'));
-
                 let rowMd = cols.map(c => {
                     let cellContent = '';
-                    c.childNodes.forEach(child => {
-                        cellContent += convertToMarkdown(child);
-                    });
+                    c.childNodes.forEach(child => { cellContent += convertToMarkdown(child); });
                     return cellContent.replace(/\n+/g, ' ').trim();
                 }).join(' | ');
 
                 md += `| ${rowMd} |\n`;
-
-                if (index === 0) {
-                    md += `| ${cols.map(() => '---').join(' | ')} |\n`;
-                }
+                if (index === 0) md += `| ${cols.map(() => '---').join(' | ')} |\n`;
             });
             return md + '\n';
         }
 
-        if (['tr', 'td', 'th', 'tbody', 'thead'].includes(tag)) {
-            return '';
-        }
+        if (['tr', 'td', 'th', 'tbody', 'thead'].includes(tag)) return '';
 
         let childMd = '';
         if (node.childNodes && node.childNodes.length > 0) {
-            node.childNodes.forEach(child => {
-                childMd += convertToMarkdown(child);
-            });
+            node.childNodes.forEach(child => { childMd += convertToMarkdown(child); });
         } else {
             childMd = node.textContent || '';
         }
 
-        // Tag formatting
         if (tag === 'h1') return `\n# ${childMd.trim()}\n\n`;
         if (tag === 'h2') return `\n## ${childMd.trim()}\n\n`;
         if (tag === 'h3') return `\n### ${childMd.trim()}\n\n`;
@@ -247,7 +218,7 @@
         return childMd;
     }
 
-    // Clean file name generator
+    // Clean file name generator (Titolo completo)
     function getCleanFileName() {
         let title = '';
 
@@ -273,8 +244,9 @@
             }
         }
 
+        // Rimuove caratteri vietati nei filesystem (\ / : * ? " < > |) e normalizza gli spazi
         let cleaned = title
-            .replace(/[^\w\s\u00C0-\u024F]/gi, '')
+            .replace(/[\\/:*?"<>|]/g, '')
             .replace(/\s+/g, ' ')
             .trim();
 
@@ -282,11 +254,10 @@
             return 'Gemini Chat';
         }
 
-        const words = cleaned.split(' ').filter(Boolean);
-        return words.slice(0, 2).join(' ');
+        // Mantiene il titolo intero (con un tetto massimo di sicurezza per i vincoli di OS)
+        return cleaned.length > 120 ? cleaned.slice(0, 120).trim() : cleaned;
     }
 
-    // Download handler
     function downloadFile(content) {
         const namePart = getCleanFileName();
         const datePart = new Date().toISOString().slice(0, 10);
@@ -307,5 +278,4 @@
         if (document.body) createExportButton();
     });
     observer.observe(document.documentElement, { childList: true, subtree: true });
-
 })();
