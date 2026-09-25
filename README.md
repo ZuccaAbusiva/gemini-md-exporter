@@ -16,8 +16,6 @@ A powerful, privacy-first Userscript that exports your Google Gemini chats into 
     </td>
   </tr>
 </table>
-<img width="1226" height="861" alt="image" src="https://github.com/user-attachments/assets/69ba3500-1666-4568-a20f-436163417924" />
-<img width="1249" height="873" alt="image" src="https://github.com/user-attachments/assets/d9037d59-9392-4a8e-b998-e2c57bd0e9e9" />
 
 
 ## ✨ Features & Key Advantages
